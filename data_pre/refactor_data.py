@@ -48,7 +48,7 @@ def refactor_item_data():
 
 def refactor_cate_data():
     """
-    重构蔬菜品类对应日期的销售量
+    重构蔬菜品类对应日期的销售量数据
     :return: 各蔬菜品类对应日期的销售量.csv
     """
     data = pd.read_csv(file3)
