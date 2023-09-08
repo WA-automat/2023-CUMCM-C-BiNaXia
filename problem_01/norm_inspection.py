@@ -8,6 +8,18 @@ file2 = '../data/各蔬菜品类对应日期的销售量.csv'
 file3 = '../附件1-蔬菜品类的商品信息.csv'
 
 
+def get_item_msg_by_code(code):
+    data = pd.read_csv(file3)
+    for index, row in data.iterrows():
+        if str(row['单品编码']) == code:
+            return {
+                '单品编码': row['单品编码'],
+                '单品名称': row['单品名称'],
+                '分类编码': row['分类编码'],
+                '分类名称': row['分类名称']
+            }
+
+
 def get_cate_name_by_code(code):
     data = pd.read_csv(file3)
     for index, row in data.iterrows():
@@ -60,6 +72,13 @@ def draw_part_norm_inspection(data):
 
     col = data.columns
 
+    # res = []
+    #
+    # for i in col:
+    #     res.append(get_item_msg_by_code(i)['单品名称'])
+    #
+    # print(res)
+
     for i in range(25):
         plt.subplot(5, 5, i + 1)
         plt.hist(data[col[i]], bins=13, color='steelblue', density=True)
@@ -96,6 +115,13 @@ def ks_inspection(data):
 
 if __name__ == '__main__':
     # data = pd.read_csv(file2)
-    # draw_cate_norm_inspection(data)
+    # # draw_cate_norm_inspection(data)
+    # cols = data.columns[1:]
+    # for col in cols:
+    #     print(ks_inspection(data[col]))
+
     data = pd.read_csv(file1).iloc[:, 30:55]
-    draw_part_norm_inspection(data)
+    # draw_part_norm_inspection(data)
+    cols = data.columns
+    for col in cols:
+        print(ks_inspection(data[col]))
