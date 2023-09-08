@@ -2,6 +2,9 @@ import matplotlib.pyplot as plt
 import numpy as np
 import pandas as pd
 from scipy import stats
+import warnings
+
+warnings.filterwarnings('ignore')
 
 file1 = '../data/各单品对应日期的销售量.csv'
 file2 = '../data/各蔬菜品类对应日期的销售量.csv'
@@ -72,13 +75,6 @@ def draw_part_norm_inspection(data):
 
     col = data.columns
 
-    # res = []
-    #
-    # for i in col:
-    #     res.append(get_item_msg_by_code(i)['单品名称'])
-    #
-    # print(res)
-
     for i in range(25):
         plt.subplot(5, 5, i + 1)
         plt.hist(data[col[i]], bins=13, color='steelblue', density=True)
@@ -102,6 +98,67 @@ def draw_part_norm_inspection(data):
     plt.show()
 
 
+def draw_cate_qq_inspection(data):
+    """
+    :param data: 绘制品类分布直方图的数据
+    :return: Q-Q图
+    """
+    plt.style.use('seaborn-white')
+    plt.rcParams['font.sans-serif'] = 'SimHei'
+    plt.rcParams['axes.unicode_minus'] = False
+    plt.subplots_adjust(wspace=0.45, hspace=0.3)
+
+    col = data.columns
+
+    for i in range(7):
+        if i == 0:
+            continue
+        plt.subplot(2, 3, i)
+        stats.probplot(data[col[i]], plot=plt)
+
+        plt.xticks([])
+        plt.xlabel('')
+        plt.ylabel('Ordered Values', fontdict={"family": "Times New Roman", "size": 10})
+
+        plt.title(get_cate_name_by_code(col[i]), fontsize=12)
+
+    plt.tight_layout()
+    plt.savefig('../data/六大蔬菜品类销售量的Q-Q图.png', dpi=300)
+    plt.show()
+
+
+def draw_item_qq_inspection(data):
+    """
+    :param data: 绘制部分单品销售量Q-Q图
+    :return: Q-Q图
+    """
+    plt.style.use('bmh')
+    plt.subplots_adjust(wspace=0.45, hspace=0.3)
+
+    col = data.columns
+
+    res = []
+    for i in col:
+        res.append(get_item_msg_by_code(i)['单品名称'])
+
+    print(res)
+
+    for i in range(9):
+        plt.subplot(3, 3, i + 1)
+        stats.probplot(data[col[i]], plot=plt)
+
+        plt.xlabel('')
+        plt.ylabel('Ordered Values', fontsize=10)
+        plt.title('')
+        plt.tick_params(axis='both', which='both', labelbottom=True, labelleft=True)
+        plt.xticks([])
+        plt.yticks([])
+
+    plt.tight_layout()
+    plt.savefig('../data/部分蔬菜单品销售量Q-Q图.png')
+    plt.show()
+
+
 def ks_inspection(data):
     """
     K-S检验数据正态性, p值大于0.05符合正态分布
@@ -114,14 +171,16 @@ def ks_inspection(data):
 
 
 if __name__ == '__main__':
-    # data = pd.read_csv(file2)
+    data = pd.read_csv(file2)
+    draw_cate_qq_inspection(data)
     # # draw_cate_norm_inspection(data)
-    # cols = data.columns[1:]
-    # for col in cols:
-    #     print(ks_inspection(data[col]))
+    # # cols = data.columns[1:]
+    # # for col in cols:
+    # #     print(ks_inspection(data[col]))
 
-    data = pd.read_csv(file1).iloc[:, 30:55]
-    # draw_part_norm_inspection(data)
-    cols = data.columns
-    for col in cols:
-        print(ks_inspection(data[col]))
+    # data = pd.read_csv(file1).iloc[:, 67:76]
+    # draw_item_qq_inspection(data)
+    # # # # draw_part_norm_inspection(data)
+    # # # cols = data.columns
+    # # # for col in cols:
+    # # #     print(ks_inspection(data[col]))
