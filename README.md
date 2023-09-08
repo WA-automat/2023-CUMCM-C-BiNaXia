@@ -80,11 +80,13 @@ $$
 
 输出：第$t$天的购买量
 
-构建 ==SARIMAX 模型==（若无季节性，可以使用 VAR 或 ARIMAX 模型）
+构建 ==SARIMAX-SVR 模型==（若无季节性，可以使用 VAR 或 ARIMAX 模型）
 
 <img src="README/image-20230908155531785.png" alt="image-20230908155531785" style="zoom:33%;" />
 
 参数确定：[时间序列模型(四)：ARIMA模型 - 知乎 (zhihu.com)](https://zhuanlan.zhihu.com/p/634120397)
+
+
 
 ### 问题四
 
