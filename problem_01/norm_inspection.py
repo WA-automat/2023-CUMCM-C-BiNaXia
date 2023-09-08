@@ -17,7 +17,7 @@ def get_cate_name_by_code(code):
 
 def draw_cate_norm_inspection(data):
     """
-    :param data: 绘制分布直方图的数据
+    :param data: 绘制品类分布直方图的数据
     :return: png
     """
     plt.style.use('ggplot')
@@ -48,6 +48,41 @@ def draw_cate_norm_inspection(data):
     plt.show()
 
 
+def draw_part_norm_inspection(data):
+    """
+    :param data: 绘制部分单品销售量的分布直方图
+    :return: png
+    """
+    plt.style.use('bmh')
+    plt.rcParams['font.sans-serif'] = 'SimHei'
+    plt.rcParams['axes.unicode_minus'] = False
+    plt.subplots_adjust(wspace=0.45, hspace=0.3)
+
+    col = data.columns
+
+    for i in range(25):
+        plt.subplot(5, 5, i + 1)
+        plt.hist(data[col[i]], bins=13, color='steelblue', density=True)
+
+        xmin, xmax = plt.xlim()
+        x = np.linspace(xmin, xmax, 100)
+        density = stats.gaussian_kde(data[col[i]])
+        y = density(x)
+        plt.plot(x, y, color='#CD5C5C', linewidth=1)
+
+        plt.tick_params(axis='both', which='both', labelbottom=True, labelleft=True)
+        plt.xticks([])
+        plt.yticks([])
+
+        if i > 19:
+            plt.xlabel('时间', fontsize=10)
+        if i % 5 == 0:
+            plt.ylabel('销售量', fontsize=10)
+    plt.tight_layout()
+    plt.savefig('../data/部分蔬菜单品销售量的分布直方图.png')
+    plt.show()
+
+
 def ks_inspection(data):
     """
     K-S检验数据正态性, p值大于0.05符合正态分布
@@ -62,4 +97,5 @@ def ks_inspection(data):
 if __name__ == '__main__':
     # data = pd.read_csv(file2)
     # draw_cate_norm_inspection(data)
-    print()
+    data = pd.read_csv(file1).iloc[:, 30:55]
+    draw_part_norm_inspection(data)
