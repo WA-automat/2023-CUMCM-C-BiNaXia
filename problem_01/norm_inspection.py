@@ -154,6 +154,8 @@ def draw_item_qq_inspection(data):
         plt.xlabel('')
         plt.ylabel('Ordered Values', fontsize=10)
         plt.title('')
+        plt.text(0.7, 0.9, get_item_msg_by_code(col[i])['单品名称'], ha='center', va='center',
+                 transform=plt.gca().transAxes, fontsize=7)
         plt.tick_params(axis='both', which='both', labelbottom=True, labelleft=True)
         plt.xticks([])
         plt.yticks([])
