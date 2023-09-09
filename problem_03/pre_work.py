@@ -27,6 +27,8 @@ def get_sale_items():
     """
     days = ['2023-06-24', '2023-06-25', '2023-06-26', '2023-06-27', '2023-06-28', '2023-06-29', '2023-06-30']
     df = pd.read_csv('../附件2-销售流水明细数据.csv').iloc[-5000:]
+    days = pd.to_datetime(days)
+    df['销售日期'] = pd.to_datetime(df['销售日期'])
     item_code_list = []
     for day in days:
         for idx, row in df.iterrows():
@@ -36,7 +38,7 @@ def get_sale_items():
     item = {}
     for code in item_code:
         item[code] = get_item_msg_by_code(code)
-    dfx = pd.DataFrame(columns=['单品编号', '单品名称', '分类编码', '分类名称'])
+    dfx = pd.DataFrame(columns=['单品编码', '单品名称', '分类编码', '分类名称'])
     for code in item_code:
         dfx.loc[len(dfx)] = [code, item[code]['单品名称'], item[code]['分类编码'], item[code]['分类名称']]
     print(dfx)
