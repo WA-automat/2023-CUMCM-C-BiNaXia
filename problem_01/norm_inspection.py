@@ -107,7 +107,7 @@ def draw_cate_qq_inspection(data):
     :param data: 绘制品类分布直方图的数据
     :return: Q-Q图
     """
-    plt.style.use('seaborn-white')
+    plt.style.use('bmh')
     plt.rcParams['font.sans-serif'] = 'SimHei'
     plt.rcParams['axes.unicode_minus'] = False
     plt.subplots_adjust(wspace=0.45, hspace=0.3)
@@ -121,8 +121,8 @@ def draw_cate_qq_inspection(data):
         stats.probplot(data[col[i]], plot=plt)
 
         plt.xticks([])
-        plt.xlabel('')
-        plt.ylabel('Ordered Values', fontdict={"family": "Times New Roman", "size": 10})
+        plt.xlabel('$q_i$', fontdict={"size": 12})
+        plt.ylabel('$x_i$', fontdict={"size": 12}, rotation=0, labelpad=10)
 
         plt.title(get_cate_name_by_code(col[i]), fontsize=12)
 
@@ -137,7 +137,9 @@ def draw_item_qq_inspection(data):
     :return: Q-Q图
     """
     plt.style.use('bmh')
-    plt.subplots_adjust(wspace=0.45, hspace=0.3)
+    plt.rcParams['font.sans-serif'] = 'SimHei'
+    plt.rcParams['axes.unicode_minus'] = False
+    plt.subplots_adjust(wspace=0.45, hspace=0.1)
 
     col = data.columns
 
@@ -151,17 +153,16 @@ def draw_item_qq_inspection(data):
         plt.subplot(3, 3, i + 1)
         stats.probplot(data[col[i]], plot=plt)
 
-        plt.xlabel('')
-        plt.ylabel('Ordered Values', fontsize=10)
+        plt.xlabel('$q_i$', fontsize=12)
+        plt.ylabel('$x_i$', fontsize=12, rotation=0, labelpad=10)
         plt.title('')
-        plt.text(0.7, 0.9, get_item_msg_by_code(col[i])['单品名称'], ha='center', va='center',
-                 transform=plt.gca().transAxes, fontsize=7)
+        plt.text(0.3, 0.9, get_item_msg_by_code(col[i])['单品名称'], ha='center', va='center',
+                 transform=plt.gca().transAxes, fontsize=8)
         plt.tick_params(axis='both', which='both', labelbottom=True, labelleft=True)
         plt.xticks([])
-        plt.yticks([])
 
     plt.tight_layout()
-    plt.savefig('../data/部分蔬菜单品销售量Q-Q图.png')
+    plt.savefig('../data/部分蔬菜单品销售量Q-Q图.png', dpi=300)
     plt.show()
 
 
@@ -184,8 +185,8 @@ if __name__ == '__main__':
     # for col in cols:
     #     print(get_cate_name_by_code(col) + ':', ks_inspection(data[col]))
 
-    # data = pd.read_csv(file1).iloc[:, 67:76]
-    # draw_item_qq_inspection(data)
+    data = pd.read_csv(file1).iloc[:, 67:76]
+    draw_item_qq_inspection(data)
     # cols = data.columns
     # for col in cols:
     #     print(ks_inspection(data[col]))
@@ -206,15 +207,15 @@ if __name__ == '__main__':
     # for col in cols:
     #     print(get_item_msg_by_code(col)['单品名称'] + ' ks检验结果:', ks_inspection(data[col]))
 
-    data = pd.read_csv(file1).iloc[:, 1:]
-    item_codes = data.columns
-    ks_DRes_of_item = {}
-    ks_PRes_of_item = {}
-    for code in item_codes:
-        res = ks_inspection(data[code])
-        ks_DRes_of_item[get_item_msg_by_code(code)['单品名称']] = res.statistic
-        ks_PRes_of_item[get_item_msg_by_code(code)['单品名称']] = res.pvalue
-    DDataframe = pd.DataFrame.from_dict(ks_DRes_of_item, orient='index', columns=['D值'])
-    DDataframe.to_csv('../data/各单品的ks检验结果D值.csv', index_label='单品名称', encoding="gbk")
-    PDataframe = pd.DataFrame.from_dict(ks_PRes_of_item, orient='index', columns=['P值'])
-    PDataframe.to_csv('../data/各单品的ks检验结果P值.csv', index_label='单品名称', encoding="gbk")
+    # data = pd.read_csv(file1).iloc[:, 1:]
+    # item_codes = data.columns
+    # ks_DRes_of_item = {}
+    # ks_PRes_of_item = {}
+    # for code in item_codes:
+    #     res = ks_inspection(data[code])
+    #     ks_DRes_of_item[get_item_msg_by_code(code)['单品名称']] = res.statistic
+    #     ks_PRes_of_item[get_item_msg_by_code(code)['单品名称']] = res.pvalue
+    # DDataframe = pd.DataFrame.from_dict(ks_DRes_of_item, orient='index', columns=['D值'])
+    # DDataframe.to_csv('../data/各单品的ks检验结果D值.csv', index_label='单品名称', encoding="gbk")
+    # PDataframe = pd.DataFrame.from_dict(ks_PRes_of_item, orient='index', columns=['P值'])
+    # PDataframe.to_csv('../data/各单品的ks检验结果P值.csv', index_label='单品名称', encoding="gbk")
