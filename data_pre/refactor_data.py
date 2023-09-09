@@ -75,5 +75,5 @@ def refactor_cate_data():
 
 
 if __name__ == '__main__':
-    # refactor_item_data()
-    refactor_cate_data()
+    refactor_item_data()
+    # refactor_cate_data()
