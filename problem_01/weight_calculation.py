@@ -24,23 +24,32 @@ def get_code_weight():
     cost = pd.read_csv(file3)
     mp = {}
     ans = {}
-    for index, row in data.iterrows():
+    dictTable = {}
+    for index, row in codeTable.iterrows():
         mp[str(row['单品编码'])] = 0
         tmp = get_item_msg_by_code(str(row['单品编码']))
-        ans[tmp['分类编码']] = 0
+        dictTable[str(tmp['单品编码'])] = tmp
+        ans[str(tmp['分类编码'])] = 0
+
     print('开始计算贡献率')
     for index, row in data.iterrows():
+        if index % 10000 == 0:
+            print(index)
         tmpPrice = row['销量(千克)'] * \
                    (row['销售单价(元/千克)'] -
-                    cost[np.logical_and(str(cost['单品编码']) == str(row['单品编码']),
-                                        cost['日期'] == row['销售日期'])])
+                    cost[np.logical_and(cost['单品编码'] == row['单品编码'],
+                                        cost['日期'] == row['销售日期'])]['批发价格(元/千克)'].values[0])
         mp[str(row['单品编码'])] += tmpPrice
-        tmp = get_item_msg_by_code(str(row['单品编码']))
-        ans[tmp['分类编码']] += tmpPrice
-    df = pd.DataFrame(index=['单品编码', '分类编码', '贡献率'])
+        tmp = dictTable[str(row['单品编码'])]
+        ans[str(tmp['分类编码'])] += tmpPrice
+        # print(mp[str(row['单品编码'])])
+        # print(ans[str(tmp['分类编码'])])
+        # print(mp[str(row['单品编码'])] / ans[str(tmp['分类编码'])])
+
+    df = pd.DataFrame(columns=['单品编码', '分类编码', '贡献率'])
     for index, row in codeTable.iterrows():
         tmp = get_item_msg_by_code(str(row['单品编码']))
-        df.loc[len(df)] = [tmp['单品编码'], tmp['分类编码'], mp[str(row['单品编码'])] / ans[tmp['分类编码']]]
+        df.loc[len(df)] = [str(tmp['单品编码']), str(tmp['分类编码']), mp[str(row['单品编码'])] / ans[str(tmp['分类编码'])]]
     print('贡献率计算完成')
     df.to_csv('../data/各单品对应品类的贡献率.csv')
 
